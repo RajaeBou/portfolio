@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="fr" x-data="portfolioData()" x-init="init()">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio d'Activités | Rajae Bouziani</title>
+
+    <!-- Polices & Icones -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <!-- Bibliothèques JS -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass {
+            background: rgba(21, 21, 28, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 22px rgba(212, 175, 55, 0.28);
+        }
+
+        .icon-gold {
+            background: #D4AF37;
+            color: #0B0B0F;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.28);
+        }
+
+        .icon-bronze {
+            background: #8A6A18;
+            color: #ffffff;
+        }
+
+        .icon-softgold {
+            background: #F5D76E;
+            color: #0B0B0F;
+        }
+
+        .icon-darkgold {
+            background: #5F4A14;
+            color: #ffffff;
+        }
+
+        .icon-amber {
+            background: #B8860B;
+            color: #ffffff;
+        }
+
+        .icon-rosegold {
+            background: #B76E79;
+            color: #ffffff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0B0B0F;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3A2F16;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-[#0B0B0F] text-slate-200 min-h-screen">
+
+<div class="flex flex-col md:flex-row">
+
+    <!-- SIDEBAR -->
+    <aside class="w-full md:w-64 bg-[#111116] h-auto md:h-screen sticky top-0 p-6 flex flex-col border-r border-[#2A2A32] z-40">
+
+        <!-- IDENTITÉ + CV -->
+        <div class="mb-10">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-[#D4AF37] rounded-xl flex items-center justify-center font-bold text-black shadow-lg">
+                    RB
+                </div>
+
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight text-white">
+                        Rajae Bouziani
+                    </h1>
+                    <p class="text-xs text-slate-400">
+                        Portfolio 2026
+                    </p>
+                </div>
+            </div>
+
+            <a 
+                href="documents/CV.pdf"
+                target="_blank"
+                class="mt-4 flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-[#D4AF37] hover:bg-[#F5D76E] text-black text-sm font-bold transition shadow-lg">
+                <i class="fas fa-file-pdf"></i>
+                Voir mon CV
+            </a>
+        </div>
+
+        <nav class="space-y-4 flex-grow">
+            <button 
+                @click="filter = 'all'" 
+                :class="filter === 'all' ? 'text-[#D4AF37] bg-[#D4AF37]/10' : ''" 
+                class="flex items-center gap-3 w-full p-3 rounded-xl transition hover:bg-[#D4AF37]/10">
+                <i class="fas fa-th-large"></i> Vue d'ensemble
+            </button>
+
+            <button 
+                @click="filter = 'tech'" 
+                :class="filter === 'tech' ? 'text-[#D4AF37] bg-[#D4AF37]/10' : ''" 
+                class="flex items-center gap-3 w-full p-3 rounded-xl transition hover:bg-[#D4AF37]/10">
+                <i class="fas fa-microchip"></i> Tech & IA
+            </button>
+
+            <button 
+                @click="filter = 'sport'" 
+                :class="filter === 'sport' ? 'text-[#D4AF37] bg-[#D4AF37]/10' : ''" 
+                class="flex items-center gap-3 w-full p-3 rounded-xl transition hover:bg-[#D4AF37]/10">
+                <i class="fas fa-running"></i> Engagement / Sport
+            </button>
+
+            <button 
+                @click="filter = 'langue'" 
+                :class="filter === 'langue' ? 'text-[#D4AF37] bg-[#D4AF37]/10' : ''" 
+                class="flex items-center gap-3 w-full p-3 rounded-xl transition hover:bg-[#D4AF37]/10">
+                <i class="fas fa-language"></i> Développement
+            </button>
+        </nav>
+
+        <div class="mt-10 p-4 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#8A6A18] text-black">
+            <p class="text-xs font-semibold uppercase opacity-80 mb-1">
+                Heures validées
+            </p>
+
+            <p class="text-3xl font-bold" x-text="totalHours + 'h'"></p>
+
+            <div class="w-full bg-black/20 h-2 rounded-full mt-2">
+                <div 
+                    class="bg-black h-2 rounded-full" 
+                    :style="`width: ${Math.min((totalHours / 60) * 100, 100)}%`">
+                </div>
+            </div>
+
+            <p class="text-[10px] mt-2 opacity-80 italic">
+                Objectif 60h :
+                <span x-text="totalHours >= 60 ? 'Validé ✓' : 'En cours'"></span>
+            </p>
+
+            <p class="text-[10px] mt-1 opacity-80 italic">
+                Heures réelles : <span x-text="realTotalHours + 'h'"></span>
+            </p>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 p-4 md:p-10 overflow-y-auto">
+
+        <!-- HEADER -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+            <div>
+                <h2 class="text-3xl font-bold text-white">
+                    Tableau de bord
+                </h2>
+                <p class="text-slate-400">
+                    Suivi des activités extracurriculaires, compétences techniques et soft skills.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <span class="px-4 py-2 rounded-full glass text-sm">
+                    Status :
+                    <span class="text-[#D4AF37] font-bold">
+                        Étudiante en Informatique
+                    </span>
+                </span>
+            </div>
+        </header>
+
+        <!-- STATS -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+
+            <div class="lg:col-span-2 glass rounded-3xl p-6">
+                <h3 class="text-lg font-semibold mb-4">
+                    Répartition des heures validées
+                </h3>
+
+                <div class="h-[250px]">
+                    <canvas id="hoursChart"></canvas>
+                </div>
+            </div>
+
+            <div class="glass rounded-3xl p-6 flex flex-col justify-center items-center text-center">
+
+                <div class="relative w-32 h-32 mb-4">
+                    <svg class="w-full h-full" viewBox="0 0 36 36">
+                        <path 
+                            class="text-[#2A2A32]" 
+                            stroke-width="3" 
+                            stroke="currentColor" 
+                            fill="none" 
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
+                        />
+
+                        <path 
+                            class="text-[#D4AF37]" 
+                            stroke-width="3" 
+                            stroke-dasharray="100, 100" 
+                            stroke-linecap="round" 
+                            stroke="currentColor" 
+                            fill="none" 
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
+                        />
+                    </svg>
+
+                    <div class="absolute inset-0 flex items-center justify-center font-bold text-2xl">
+                        <span x-text="realTotalHours + 'h'"></span>
+                    </div>
+                </div>
+
+                <p class="font-medium text-slate-300">
+                    Volume horaire réel
+                </p>
+
+                <p class="text-sm text-slate-500 mt-2">
+                    Heures réellement investies, même lorsque seules certaines heures sont validées.
+                </p>
+            </div>
+        </section>
+
+        <!-- CARDS -->
+        <section>
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">
+                    Activités
+                </h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                <template x-for="item in filteredActivities" :key="item.id">
+
+                    <div 
+                        @click="openModal(item)" 
+                        class="glass rounded-2xl p-5 cursor-pointer transform transition hover:-translate-y-2 hover:border-[#D4AF37]/50 group">
+
+                        <div class="flex justify-between items-start mb-4">
+
+                            <span 
+                                :class="item.colorClass" 
+                                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg">
+                                <i :class="item.icon"></i>
+                            </span>
+
+                            <div class="text-right">
+                                <span 
+                                    class="px-3 py-1 rounded-full bg-[#0B0B0F] text-xs font-bold text-slate-300 border border-[#D4AF37]/20" 
+                                    x-text="item.hours + 'h validées'">
+                                </span>
+
+                                <p class="text-[10px] text-slate-500 mt-1">
+                                    Réel :
+                                    <span x-text="item.realHours + 'h'"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <h4 
+                            class="text-lg font-bold text-white group-hover:text-[#D4AF37] transition" 
+                            x-text="item.title">
+                        </h4>
+
+                        <p 
+                            class="text-sm text-slate-400 mt-2 line-clamp-2" 
+                            x-text="item.shortDesc">
+                        </p>
+
+                        <div class="mt-4 pt-4 border-t border-[#2A2A32] flex justify-between items-center">
+                            <span 
+                                class="text-[10px] uppercase tracking-widest text-slate-500 font-bold" 
+                                x-text="item.category">
+                            </span>
+
+                            <i class="fas fa-arrow-right text-[#D4AF37] opacity-0 group-hover:opacity-100 transition"></i>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        <!-- TABLE -->
+        <section class="mt-16">
+            <h3 class="text-xl font-semibold mb-6">
+                Récapitulatif détaillé
+            </h3>
+
+            <div class="glass rounded-3xl overflow-hidden overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+
+                    <thead>
+                        <tr class="bg-[#111116]">
+                            <th class="p-4 font-semibold">Activité</th>
+                            <th class="p-4 font-semibold">Catégorie</th>
+                            <th class="p-4 font-semibold text-center">Heures validées</th>
+                            <th class="p-4 font-semibold text-center">Heures réelles</th>
+                            <th class="p-4 font-semibold">Justificatif</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <template x-for="item in activities" :key="item.id">
+                            <tr class="border-t border-[#2A2A32] hover:bg-[#D4AF37]/5 transition">
+                                
+                                <td class="p-4 font-medium text-white" x-text="item.title"></td>
+                                
+                                <td class="p-4 capitalize text-slate-400 text-sm" x-text="item.category"></td>
+                                
+                                <td class="p-4 text-center font-bold text-[#D4AF37]" x-text="item.hours + 'h'"></td>
+                                
+                                <td class="p-4 text-center font-bold text-[#F5D76E]" x-text="item.realHours + 'h'"></td>
+
+                                <td class="p-4">
+                                    <button 
+                                        @click="openProof(item)"
+                                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black text-xs font-semibold transition">
+                                        
+                                        <i 
+                                            :class="item.status === 'Certifié' ? 'fas fa-certificate' : item.status.includes('Participation documentée') ? 'fas fa-folder-open' : 'fas fa-image'">
+                                        </i>
+
+                                        <span x-text="getProofLabel(item)"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="mt-20 pt-8 border-t border-[#2A2A32] text-center text-sm text-slate-500">
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+
+                <div class="text-left">
+                    <p class="font-semibold text-slate-300">
+                        Rajae Bouziani
+                    </p>
+                    <p>
+                        Portfolio d’activités — Informatique, compétences techniques et développement personnel.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+
+                    <a 
+                        href="documents/CV.pdf" 
+                        target="_blank"
+                        class="hover:text-[#D4AF37] transition">
+                        <i class="fas fa-file-pdf mr-1"></i>
+                        CV
+                    </a>
+
+                    <a 
+                        href="mailto:rajaebouziani4@gmail.com"
+                        class="hover:text-[#D4AF37] transition">
+                        <i class="fas fa-envelope mr-1"></i>
+                        Email
+                    </a>
+
+                    <a 
+                        href="https://www.linkedin.com/in/"
+                        target="_blank"
+                        class="hover:text-[#D4AF37] transition">
+                        <i class="fab fa-linkedin mr-1"></i>
+                        LinkedIn
+                    </a>
+
+                    <a 
+                        href="https://github.com/RajaeBou"
+                        target="_blank"
+                        class="hover:text-[#D4AF37] transition">
+                        <i class="fab fa-github mr-1"></i>
+                        GitHub
+                    </a>
+
+                </div>
+            </div>
+
+            <p class="mt-6 text-xs text-slate-600">
+                © 2026 Rajae Bouziani — Portfolio d’activités et de compétences.
+            </p>
+
+        </footer>
+
+    </main>
+</div>
+
+<!-- MODAL -->
+<div 
+    x-show="isModalOpen"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
+    @click.self="isModalOpen = false"
+    style="display: none;">
+
+    <div class="glass w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl p-8 shadow-2xl relative">
+
+        <button 
+            @click="isModalOpen = false" 
+            class="absolute top-6 right-6 text-slate-400 hover:text-[#D4AF37]">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+
+        <div class="flex items-center gap-4 mb-6">
+
+            <div 
+                :class="selectedItem.colorClass" 
+                class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl shadow-xl">
+                <i :class="selectedItem.icon"></i>
+            </div>
+
+            <div>
+                <h3 
+                    class="text-2xl font-bold text-white" 
+                    x-text="selectedItem.title">
+                </h3>
+
+                <p class="text-[#D4AF37] font-semibold">
+                    <span x-text="selectedItem.hours"></span> heures validées /
+                    <span x-text="selectedItem.realHours"></span> heures réelles
+                </p>
+
+                <p 
+                    class="text-xs mt-1"
+                    :class="selectedItem.status === 'Certifié' ? 'text-[#D4AF37]' : 'text-slate-300'"
+                    x-text="selectedItem.status">
+                </p>
+            </div>
+        </div>
+
+        <div class="space-y-6 text-slate-300">
+
+            <div>
+                <h4 class="text-sm uppercase font-bold text-slate-500 mb-2">
+                    Description
+                </h4>
+
+                <p x-text="selectedItem.fullDesc"></p>
+            </div>
+
+            <div>
+                <h4 class="text-sm uppercase font-bold text-slate-500 mb-2">
+                    Justificatifs
+                </h4>
+
+                <div class="bg-[#111116] rounded-xl border border-[#D4AF37]/20 overflow-hidden">
+
+                    <!-- Images -->
+                    <template x-if="selectedItem.proofImgs && selectedItem.proofImgs.length > 0">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-4">
+                            <template x-for="img in selectedItem.proofImgs" :key="img">
+                                <a :href="img" target="_blank">
+                                    <img 
+                                        :src="img"
+                                        alt="Justificatif"
+                                        class="w-full h-48 object-contain bg-[#0B0B0F] rounded-lg border border-[#2A2A32] hover:border-[#D4AF37] transition">
+                                </a>
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- PDF seulement -->
+                    <template x-if="!selectedItem.proofImgs || selectedItem.proofImgs.length === 0">
+                        <div class="p-8 flex flex-col items-center justify-center text-center">
+                            <i class="fas fa-file-pdf text-4xl mb-2 opacity-30"></i>
+                            <p class="text-sm text-slate-400">
+                                Certificat disponible en PDF.
+                            </p>
+                        </div>
+                    </template>
+
+                    <!-- Boutons -->
+                    <div class="p-4 border-t border-[#2A2A32] flex flex-col md:flex-row gap-3 justify-between items-start md:items-center">
+
+                        <p class="text-xs text-slate-400">
+                            Fichier :
+                            <span x-text="selectedItem.fileName"></span>
+                        </p>
+
+                        <div class="flex flex-wrap gap-3">
+
+                            <template x-if="selectedItem.proofPdf">
+                                <a 
+                                    :href="selectedItem.proofPdf"
+                                    target="_blank"
+                                    class="px-4 py-2 bg-[#D4AF37] hover:bg-[#F5D76E] text-black rounded-lg text-sm font-bold transition">
+                                    Ouvrir le certificat
+                                </a>
+                            </template>
+
+                            <template x-if="selectedItem.proofImgs && selectedItem.proofImgs.length > 0">
+                                <a 
+                                    :href="selectedItem.proofImgs[0]"
+                                    target="_blank"
+                                    class="px-4 py-2 bg-[#1A1A22] hover:bg-[#2A2A32] rounded-lg text-sm font-semibold transition">
+                                    Ouvrir la première image
+                                </a>
+                            </template>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-end">
+            <button 
+                @click="isModalOpen = false" 
+                class="px-6 py-2 bg-[#D4AF37] hover:bg-[#F5D76E] text-black rounded-xl font-bold transition">
+                Fermer
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+    function portfolioData() {
+        return {
+            filter: 'all',
+            isModalOpen: false,
+            selectedItem: {},
+
+            activities: [
+                {
+                    id: 1,
+                    category: 'tech',
+                    title: 'AI Fundamentals',
+                    shortDesc: 'Certification IBM SkillsBuild couvrant les bases de l’intelligence artificielle.',
+                    fullDesc: 'Formation IBM SkillsBuild sur les fondamentaux de l’intelligence artificielle : concepts de base, usages, limites, éthique et applications professionnelles.',
+                    hours: 10,
+                    realHours: 10,
+                    status: 'Certifié',
+                    icon: 'fas fa-brain',
+                    colorClass: 'icon-gold',
+                    fileName: 'IBMDesign20260426-31-7futeh.pdf',
+                    proofPdf: 'documents/IBMDesign20260426-31-7futeh.pdf',
+                    proofImgs: []
+                },
+                {
+                    id: 2,
+                    category: 'tech',
+                    title: 'Labo réseau physique',
+                    shortDesc: 'Travail pratique sur matériel réseau réel.',
+                    fullDesc: 'Participation à un laboratoire réseau avec manipulation de matériel physique : câblage, configuration, observation et compréhension de l’infrastructure réseau.',
+                    hours: 4,
+                    realHours: 4,
+                    status: 'Preuve par captures',
+                    icon: 'fas fa-network-wired',
+                    colorClass: 'icon-bronze',
+                    fileName: 'Labo réseau.jpg / Labo_réseau_1.jpg',
+                    proofPdf: '',
+                    proofImgs: [
+                        'images/Labo réseau.jpg',
+                        'images/Labo_réseau_1.jpg'
+                    ]
+                },
+                {
+                    id: 3,
+                    category: 'tech',
+                    title: 'Proximus Tech Challenge',
+                    shortDesc: 'Participation à un challenge technologique étudiant.',
+                    fullDesc: 'Participation au Proximus Tech Challenge : découverte de problématiques technologiques, travail d’équipe, réflexion technique et développement de compétences en innovation.',
+                    hours: 10,
+                    realHours: 10,
+                    status: 'Preuve par captures',
+                    icon: 'fas fa-trophy',
+                    colorClass: 'icon-softgold',
+                    fileName: 'Proximus_1 à Proximus_7',
+                    proofPdf: '',
+                    proofImgs: [
+                        'images/Proximus_1.jpg',
+                        'images/Proximus_2.jpg',
+                        'images/Proximus_3.jpeg',
+                        'images/Proximus_4.jpeg',
+                        'images/Proximus_5.jpeg',
+                        'images/Proximus_6.jpeg',
+                        'images/Proximus_7.jpeg'
+                    ]
+                },
+                {
+                    id: 4,
+                    category: 'langue',
+                    title: 'English B1.1',
+                    shortDesc: 'Formation d’anglais niveau B1.1.',
+                    fullDesc: 'Formation d’anglais niveau B1.1 permettant de renforcer la compréhension, l’expression écrite et orale, ainsi que la communication dans un contexte académique et professionnel.',
+                    hours: 10,
+                    realHours: 16,
+                    status: 'Certifié',
+                    icon: 'fas fa-globe-europe',
+                    colorClass: 'icon-darkgold',
+                    fileName: 'Anglais_Certif.pdf',
+                    proofPdf: 'documents/Anglais_Certif.pdf',
+                    proofImgs: []
+                },
+                {
+                    id: 5,
+                    category: 'sport',
+                    title: 'Escalade',
+                    shortDesc: 'Dépassement de soi, concentration et gestion de l’effort.',
+                    fullDesc: 'Pratique régulière de l’escalade. Cette activité développe la persévérance, la gestion du stress, la confiance en soi, l’analyse de trajectoire et la capacité à progresser par étapes.',
+                    hours: 10,
+                    realHours: 60,
+                    status: 'Preuve par captures',
+                    icon: 'fas fa-mountain',
+                    colorClass: 'icon-amber',
+                    fileName: 'Escalade_1.jpeg / Escalade_2.jpeg',
+                    proofPdf: '',
+                    proofImgs: [
+                        'images/Escalade_1.jpeg',
+                        'images/Escalade_2.jpeg'
+                    ]
+                },
+                {
+                    id: 6,
+                    category: 'tech',
+                    title: 'CTF / Crypto Challenges',
+                    shortDesc: 'Participation à une série de 21 challenges CTF orientés cybersécurité et cryptographie.',
+                    fullDesc: 'Participation à une série de 21 challenges CTF orientés cybersécurité et cryptographie. J’ai progressé jusqu’au challenge 18 sur les 21 proposés et j’ai également documenté la tentative sur le challenge 19. Celui-ci n’a pas pu être poursuivi car la ressource externe nécessaire au challenge n’était plus disponible sur Pastebin. Cette activité m’a permis de travailler la logique, l’analyse, les méthodes de décodage, la recherche d’indices, la persévérance et la résolution de problèmes techniques.',
+                    hours: 10,
+                    realHours: 10,
+                    status: 'Participation documentée — 18/21',
+                    icon: 'fas fa-flag',
+                    colorClass: 'icon-rosegold',
+                    fileName: 'challenge 1 / challenge 17 / challenge 18 / Challenge_11 / challenge_19',
+                    proofPdf: '',
+                    proofImgs: [
+                        'images/challenge_1.png',
+                        'images/challenge_5.png',
+                        'images/challenge_8.png',
+                        'images/challenge_9.png',
+                        'images/challenge_20.png',
+                        'images/challenge_17.png',
+                        'images/challenge_18.png',
+                        'images/Challenge_11.png',
+                        'images/challenge_19.png'
+                    ]
+                }
+            ],
+
+            get totalHours() {
+                return this.activities.reduce((sum, item) => sum + item.hours, 0);
+            },
+
+            get realTotalHours() {
+                return this.activities.reduce((sum, item) => sum + item.realHours, 0);
+            },
+
+            get filteredActivities() {
+                if (this.filter === 'all') {
+                    return this.activities;
+                }
+
+                return this.activities.filter(activity => activity.category === this.filter);
+            },
+
+            openModal(item) {
+                this.selectedItem = item;
+                this.isModalOpen = true;
+            },
+
+            openProof(item) {
+                if (item.proofPdf) {
+                    window.open(item.proofPdf, '_blank');
+                    return;
+                }
+
+                this.openModal(item);
+            },
+
+            getProofLabel(item) {
+                if (item.status === 'Certifié') {
+                    return 'Certificat';
+                }
+
+                if (item.status.includes('Participation documentée')) {
+                    return 'Participation 18/21';
+                }
+
+                return 'Captures';
+            },
+
+            init() {
+                this.$nextTick(() => {
+                    this.initChart();
+                });
+            },
+
+            initChart() {
+                const ctx = document.getElementById('hoursChart');
+
+                if (!ctx) {
+                    return;
+                }
+
+                const techHours = this.activities
+                    .filter(item => item.category === 'tech')
+                    .reduce((sum, item) => sum + item.hours, 0);
+
+                const langueHours = this.activities
+                    .filter(item => item.category === 'langue')
+                    .reduce((sum, item) => sum + item.hours, 0);
+
+                const sportHours = this.activities
+                    .filter(item => item.category === 'sport')
+                    .reduce((sum, item) => sum + item.hours, 0);
+
+                new Chart(ctx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Tech & IA', 'Langues', 'Sport / Soft Skills'],
+                        datasets: [
+                            {
+                                label: 'Heures validées',
+                                data: [techHours, langueHours, sportHours],
+                                backgroundColor: ['#D4AF37', '#F5D76E', '#8A6A18'],
+                                borderRadius: 10,
+                                borderSkipped: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#2A2A32'
+                                },
+                                ticks: {
+                                    color: '#9CA3AF'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#9CA3AF'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

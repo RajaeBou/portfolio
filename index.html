@@ -134,7 +134,7 @@
                 @click="filter = 'langue'" 
                 :class="filter === 'langue' ? 'text-[#D4AF37] bg-[#D4AF37]/10' : ''" 
                 class="flex items-center gap-3 w-full p-3 rounded-xl transition hover:bg-[#D4AF37]/10">
-                <i class="fas fa-language"></i> Développement
+                <i class="fas fa-language"></i> Langues
             </button>
         </nav>
 
@@ -463,7 +463,7 @@
                     Description
                 </h4>
 
-                <p x-text="selectedItem.fullDesc"></p>
+                <p class="whitespace-pre-line leading-relaxed" x-text="selectedItem.fullDesc"></p>
             </div>
 
             <div>
@@ -525,6 +525,15 @@
                                 </a>
                             </template>
 
+                            <template x-if="selectedItem.externalLink">
+                                <a 
+                                    :href="selectedItem.externalLink"
+                                    target="_blank"
+                                    class="px-4 py-2 bg-[#D4AF37] hover:bg-[#F5D76E] text-black rounded-lg text-sm font-bold transition">
+                                    Ouvrir le site
+                                </a>
+                            </template>
+
                         </div>
                     </div>
 
@@ -556,7 +565,8 @@
                     category: 'tech',
                     title: 'AI Fundamentals',
                     shortDesc: 'Certification IBM SkillsBuild couvrant les bases de l’intelligence artificielle.',
-fullDesc: "Cette formation IBM SkillsBuild portait sur les fondamentaux de l’intelligence artificielle. Elle abordait les concepts de base de l’IA, ses principaux domaines d’application, ses limites, ainsi que les questions liées à l’éthique et à l’utilisation responsable de ces technologies.\n\nCette activité m’a permis de mieux comprendre le fonctionnement général de l’intelligence artificielle et son impact dans le monde professionnel. J’ai particulièrement retenu que l’IA ne se limite pas à un outil technique : elle demande aussi une réflexion sur les données utilisées, les biais possibles, la confidentialité et la responsabilité des utilisateurs.",                    hours: 10,
+                    fullDesc: "Cette formation IBM SkillsBuild portait sur les fondamentaux de l’intelligence artificielle. Elle abordait les concepts de base de l’IA, ses principaux domaines d’application, ses limites, ainsi que les questions liées à l’éthique et à l’utilisation responsable de ces technologies.\n\nCette activité m’a permis de mieux comprendre le fonctionnement général de l’intelligence artificielle et son impact dans le monde professionnel. J’ai particulièrement retenu que l’IA ne se limite pas à un outil technique : elle demande aussi une réflexion sur les données utilisées, les biais possibles, la confidentialité et la responsabilité des utilisateurs.",
+                    hours: 10,
                     realHours: 10,
                     status: 'Certifié',
                     icon: 'fas fa-brain',
@@ -569,8 +579,10 @@ fullDesc: "Cette formation IBM SkillsBuild portait sur les fondamentaux de l’i
                     id: 2,
                     category: 'tech',
                     title: 'Labo réseau physique',
-                    shortDesc: 'Travail pratique sur matériel réseau réel.',
-fullDesc: "Cette activité consistait à participer à un laboratoire réseau basé sur la manipulation de matériel physique. Nous avons travaillé sur le câblage, la configuration et l’observation d’une infrastructure réseau réelle, afin de mieux comprendre le rôle des différents équipements et leur fonctionnement.\n\nCe laboratoire m’a permis de faire le lien entre la théorie vue en cours et la réalité du terrain. J’ai apprécié le fait de manipuler directement le matériel, car cela rend les notions de réseau plus concrètes. Cette activité m’a aidée à mieux comprendre l’importance du câblage, de l’organisation de l’infrastructure et de la configuration dans le bon fonctionnement d’un réseau.",                    realHours: 4,
+                    shortDesc: 'Manipulation de matériel réseau réel : câblage, configuration et observation d’une infrastructure.',
+                    fullDesc: "Cette activité consistait à participer à un laboratoire réseau basé sur la manipulation de matériel physique. Nous avons travaillé sur le câblage, la configuration et l’observation d’une infrastructure réseau réelle, afin de mieux comprendre le rôle des différents équipements et leur fonctionnement.\n\nCe laboratoire m’a permis de faire le lien entre la théorie vue en cours et la réalité du terrain. J’ai apprécié le fait de manipuler directement le matériel, car cela rend les notions de réseau plus concrètes. Cette activité m’a aidée à mieux comprendre l’importance du câblage, de l’organisation de l’infrastructure et de la configuration dans le bon fonctionnement d’un réseau.",
+                    hours: 4,
+                    realHours: 4,
                     status: 'Preuve par captures',
                     icon: 'fas fa-network-wired',
                     colorClass: 'icon-bronze',
@@ -585,8 +597,8 @@ fullDesc: "Cette activité consistait à participer à un laboratoire réseau ba
                     id: 3,
                     category: 'tech',
                     title: 'Proximus Tech Challenge',
-                    shortDesc: 'Participation à un challenge technologique étudiant.',
-                    fullDesc: 'Participation au Proximus Tech Challenge : découverte de problématiques technologiques, travail d’équipe, réflexion technique et développement de compétences en innovation.',
+                    shortDesc: 'Événement autour de la cybersécurité, de Python, de l’orientation et des métiers technologiques.',
+                    fullDesc: "Le Proximus Tech Challenge était un événement orienté technologie, cybersécurité, programmation et découverte du monde professionnel. La journée proposait plusieurs activités, dont un challenge en cybersécurité, un challenge de programmation en Python, des conférences, des échanges avec des employés de Proximus ainsi qu’un espace d’orientation autour des métiers du numérique.\n\nCette journée m’a permis de découvrir un environnement professionnel concret et de mieux comprendre les compétences attendues dans le secteur technologique. J’ai particulièrement apprécié le fait de pouvoir participer à des challenges pratiques tout en échangeant avec des professionnels. L’événement m’a aussi aidée à réfléchir à mon orientation et à mieux situer mes intérêts entre développement, cybersécurité et métiers techniques.",
                     hours: 10,
                     realHours: 10,
                     status: 'Preuve par captures',
@@ -608,8 +620,9 @@ fullDesc: "Cette activité consistait à participer à un laboratoire réseau ba
                     id: 4,
                     category: 'langue',
                     title: 'English B1.1',
-                    shortDesc: 'Formation d’anglais niveau B1.1.',
-fullDesc: "Cette formation certifiée en anglais de niveau B1.1 avait pour objectif de renforcer les bases en compréhension écrite, compréhension orale et expression dans des situations académiques et professionnelles. Elle m’a permis de retravailler des notions essentielles de grammaire, de vocabulaire et de communication en anglais.\n\nCette activité m’a aidée à gagner en confiance dans l’utilisation de l’anglais, notamment pour comprendre des consignes, lire des documents simples et m’exprimer plus clairement. J’en retiens surtout l’importance de pratiquer régulièrement pour progresser et être plus à l’aise dans un contexte d’étude ou de travail.",                    hours: 10,
+                    shortDesc: 'Formation certifiée en anglais niveau B1.1.',
+                    fullDesc: "Cette formation certifiée en anglais de niveau B1.1 avait pour objectif de renforcer les bases en compréhension écrite, compréhension orale et expression dans des situations académiques et professionnelles. Elle m’a permis de retravailler des notions essentielles de grammaire, de vocabulaire et de communication en anglais.\n\nCette activité m’a aidée à gagner en confiance dans l’utilisation de l’anglais, notamment pour comprendre des consignes, lire des documents simples et m’exprimer plus clairement. J’en retiens surtout l’importance de pratiquer régulièrement pour progresser et être plus à l’aise dans un contexte d’étude ou de travail.",
+                    hours: 10,
                     realHours: 16,
                     status: 'Certifié',
                     icon: 'fas fa-globe-europe',
@@ -623,7 +636,7 @@ fullDesc: "Cette formation certifiée en anglais de niveau B1.1 avait pour objec
                     category: 'sport',
                     title: 'Escalade',
                     shortDesc: 'Dépassement de soi, concentration et gestion de l’effort.',
-                    fullDesc: "Pratique régulière de l’escalade, une activité qui demande de la concentration, de la persévérance et une bonne gestion du stress. Elle m’aide aussi à prendre confiance en moi, à analyser une situation avant d’agir et à progresser étape par étape.",
+                    fullDesc: "Pratique régulière de l’escalade, une activité qui demande de la concentration, de la persévérance et une bonne gestion du stress.\n\nCette activité m’aide aussi à prendre confiance en moi, à analyser une situation avant d’agir et à progresser étape par étape. Elle m’a appris à mieux gérer l’effort, à rester calme face à une difficulté et à avancer progressivement.",
                     hours: 10,
                     realHours: 60,
                     status: 'Preuve par captures',
@@ -641,7 +654,8 @@ fullDesc: "Cette formation certifiée en anglais de niveau B1.1 avait pour objec
                     category: 'tech',
                     title: 'CTF / Crypto Challenges',
                     shortDesc: 'Participation à une série de 21 challenges CTF orientés cybersécurité et cryptographie.',
-fullDesc: "Cette activité consistait à participer à une série de 21 challenges CTF orientés cybersécurité et cryptographie. Les exercices demandaient de résoudre différentes énigmes techniques en utilisant la logique, l’analyse, la recherche d’indices et des méthodes de décodage.\n\nJ’ai progressé jusqu’au challenge 18 sur les 21 proposés et j’ai également documenté ma tentative sur le challenge 19. Celui-ci n’a pas pu être finalisé car une ressource externe nécessaire au challenge n’était plus disponible sur Pastebin. Cette activité m’a permis de développer ma persévérance, ma capacité à chercher par étapes et ma manière de résoudre des problèmes techniques de façon méthodique.",                    hours: 10,
+                    fullDesc: "Cette activité consistait à participer à une série de 21 challenges CTF orientés cybersécurité et cryptographie. Les exercices demandaient de résoudre différentes énigmes techniques en utilisant la logique, l’analyse, la recherche d’indices et des méthodes de décodage.\n\nJ’ai progressé jusqu’au challenge 18 sur les 21 proposés et j’ai également documenté ma tentative sur le challenge 19. Celui-ci n’a pas pu être finalisé car une ressource externe nécessaire au challenge n’était plus disponible sur Pastebin. Cette activité m’a permis de développer ma persévérance, ma capacité à chercher par étapes et ma manière de résoudre des problèmes techniques de façon méthodique.",
+                    hours: 10,
                     realHours: 10,
                     status: 'Participation documentée — 18/21',
                     icon: 'fas fa-flag',
@@ -660,41 +674,25 @@ fullDesc: "Cette activité consistait à participer à une série de 21 challeng
                         'images/challenge_19.png'
                     ]
                 },
-
-{
-    id: 7,
-    category: 'tech',
-    title: 'Création et déploiement du site portfolio',
-    shortDesc: 'Conception, organisation et mise en ligne d’un portfolio HTML avec GitHub, Vercel, OVH, DNS et certificat SSL.',
-fullDesc: "Cette activité consistait à créer et mettre en ligne mon site portfolio personnel. J’ai structuré le site en HTML, organisé mes activités, intégré les images et les justificatifs, puis placé le projet sur GitHub.\n\nPour le déploiement, j’ai utilisé Vercel et j’ai configuré le sous-domaine portfolio.where-o-clock.be, rattaché au domaine where-o-clock.be de mon TFE. La configuration s’est faite via OVH avec une entrée DNS de type CNAME pour relier le sous-domaine à Vercel. Le site est ainsi accessible en HTTPS grâce au certificat SSL lié au domaine.\n\nCette activité m’a permis de pratiquer concrètement le déploiement d’un site web, la gestion d’un sous-domaine, la configuration DNS et l’utilisation de Git/GitHub dans un contexte réel.",
-    realHours: 15.5,
-    status: 'Preuve par captures',
-    icon: 'fas fa-cloud-upload-alt',
-    colorClass: 'bg-orange-600 text-white',
-    fileName: 'Site portfolio / GitHub / Vercel / OVH / DNS / SSL',
-    proofPdf: '',
-    proofImgs: [
-        'images/vercel_1.png',
-        'images/ovh.png'
-    ],
-    externalLink: 'https://portfolio.where-o-clock.be'
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                {
+                    id: 7,
+                    category: 'tech',
+                    title: 'Création de mon site portfolio',
+                    shortDesc: 'Création et mise en ligne de mon portfolio avec GitHub, Vercel, OVH et un sous-domaine personnalisé.',
+                    fullDesc: "Cette activité consistait à créer et mettre en ligne mon site portfolio personnel. J’ai structuré le site en HTML, organisé mes activités, intégré les images et les justificatifs, puis placé le projet sur GitHub.\n\nPour le déploiement, j’ai utilisé Vercel et j’ai configuré le sous-domaine personnalisé portfolio.where-o-clock.be, rattaché au domaine where-o-clock.be de mon TFE. La configuration s’est faite via OVH avec une entrée DNS de type CNAME afin de relier le sous-domaine à Vercel. Le site est ainsi accessible en HTTPS grâce au certificat SSL lié au domaine.\n\nCette activité m’a permis de pratiquer concrètement le déploiement d’un site web, la gestion d’un sous-domaine, la configuration DNS et l’utilisation de Git/GitHub dans un contexte réel.",
+                    hours: 6,
+                    realHours: 15.5,
+                    status: 'Preuve par captures',
+                    icon: 'fas fa-cloud-upload-alt',
+                    colorClass: 'bg-orange-600 text-white',
+                    fileName: 'Site portfolio / GitHub / Vercel / OVH / DNS / SSL',
+                    proofPdf: '',
+                    proofImgs: [
+                        'images/vercel_1.png',
+                        'images/ovh.png'
+                    ],
+                    externalLink: 'https://portfolio.where-o-clock.be'
+                }
             ],
 
             get totalHours() {
